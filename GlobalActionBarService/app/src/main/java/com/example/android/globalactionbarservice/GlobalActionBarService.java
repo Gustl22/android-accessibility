@@ -27,19 +27,59 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import androidx.test.uiautomator.UiDevice;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import static java.sql.DriverManager.println;
+
 public class GlobalActionBarService extends AccessibilityService {
+
+    FrameLayout mLayout;
+
+    @Override
+    protected void onServiceConnected() {
+        println("onServiceConnected");
+        // Create an overlay and display the action bar
+        WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+        mLayout = new FrameLayout(this);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.type = WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY;
+        lp.format = PixelFormat.TRANSLUCENT;
+        lp.flags |= WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.gravity = Gravity.TOP;
+        LayoutInflater inflater = LayoutInflater.from(this);
+        inflater.inflate(R.layout.action_bar, mLayout);
+        wm.addView(mLayout, lp);
+
+        configurePowerButton();
+
+    }
+
+    private void configurePowerButton() {
+        Button powerButton = mLayout.findViewById(R.id.power);
+        powerButton.setOnClickListener(view -> performGlobalAction(GLOBAL_ACTION_POWER_DIALOG));
+    }
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
+        println("onAccessibilityEvent");
+        if(event == null) return;
+        AccessibilityNodeInfo source = event.getSource();
+        if(source != null) {
+            println(source.toString());
+//            UiDevice.getInstance().dumpWindowHierarchy(dumpXml)
+//            AccessibilityNodeInfoDumper.
+                    device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
+        }
     }
 
     @Override
     public void onInterrupt() {
-
+        println("Interrupt");
     }
 }
