@@ -21,18 +21,24 @@ import android.util.Xml;
 import android.view.accessibility.AccessibilityNodeInfo;
 import org.xmlpull.v1.XmlSerializer;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 
 public class AccessibilityNodeInfoDumper {
-    private AccessibilityNodeInfoDumper() {
-    }
 
     private static final String LOGTAG = com.example.android.globalactionbarservice.uiautomator.AccessibilityNodeInfoDumper.class.getSimpleName();
     private static final String[] NAF_EXCLUDED_CLASSES = new String[]{
             android.widget.GridView.class.getName(), android.widget.GridLayout.class.getName(),
             android.widget.ListView.class.getName(), android.widget.TableLayout.class.getName()
     };
+
+    public static void dumpNode(AccessibilityNodeInfo node, File dest, int width, int height) throws IOException {
+        OutputStream stream = new BufferedOutputStream(new FileOutputStream(dest));
+        try {
+            dumpNode(node, stream, width, height);
+        } finally {
+            stream.close();
+        }
+    }
 
     public static void dumpNode(AccessibilityNodeInfo node, OutputStream out, int width, int height) throws IOException {
         XmlSerializer serializer = Xml.newSerializer();

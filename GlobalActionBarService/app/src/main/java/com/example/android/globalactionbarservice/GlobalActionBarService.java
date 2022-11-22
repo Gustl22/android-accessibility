@@ -28,6 +28,7 @@ import androidx.annotation.NonNull;
 import com.example.android.globalactionbarservice.uiautomator.AccessibilityNodeInfoDumper;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -75,6 +76,9 @@ public class GlobalActionBarService extends AccessibilityService {
 
             OutputStream out = new ByteArrayOutputStream();
             try {
+                // TODO output file to filesystem:
+                //File outputFile = new File("dumpNode-" + System.currentTimeMillis());
+                //AccessibilityNodeInfoDumper.dumpNode(source, outputFile, width, height);
                 AccessibilityNodeInfoDumper.dumpNode(source, out, width, height);
             } catch (IOException e) {
                 throw new RuntimeException(e);
