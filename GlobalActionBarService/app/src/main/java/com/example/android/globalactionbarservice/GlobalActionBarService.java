@@ -15,22 +15,21 @@
 package com.example.android.globalactionbarservice;
 
 import android.accessibilityservice.AccessibilityService;
-import android.accessibilityservice.GestureDescription;
-import android.graphics.Path;
+import android.graphics.Insets;
 import android.graphics.PixelFormat;
-import android.media.AudioManager;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.WindowManager;
+import android.os.Build;
+import android.util.DisplayMetrics;
+import android.view.*;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import androidx.test.uiautomator.UiDevice;
+import androidx.annotation.NonNull;
+import com.example.android.globalactionbarservice.uiautomator.AccessibilityNodeInfoDumper;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 import static java.sql.DriverManager.println;
 
@@ -67,14 +66,48 @@ public class GlobalActionBarService extends AccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         println("onAccessibilityEvent");
-        if(event == null) return;
+        if (event == null) return;
         AccessibilityNodeInfo source = event.getSource();
-        if(source != null) {
-            println(source.toString());
-//            UiDevice.getInstance().dumpWindowHierarchy(dumpXml)
-//            AccessibilityNodeInfoDumper.
-                    device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        if (source != null) {
+            WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
+            int height = getScreenHeight(wm);
+            int width = getScreenWidth(wm);
 
+            OutputStream out = new ByteArrayOutputStream();
+            try {
+                AccessibilityNodeInfoDumper.dumpNode(source, out, width, height);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            String str = out.toString();
+            println(str);
+        }
+    }
+
+    public static int getScreenWidth(@NonNull WindowManager wm) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowMetrics windowMetrics = wm.getCurrentWindowMetrics();
+            Insets insets = windowMetrics.getWindowInsets()
+                    .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars());
+            return windowMetrics.getBounds().width() - insets.left - insets.right;
+        } else {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            wm.getDefaultDisplay().getMetrics(displayMetrics);
+            return displayMetrics.widthPixels;
+        }
+    }
+
+    public static int getScreenHeight(@NonNull WindowManager wm) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowMetrics windowMetrics = wm.getCurrentWindowMetrics();
+            Insets insets = windowMetrics.getWindowInsets()
+                    .getInsetsIgnoringVisibility(WindowInsets.Type.systemBars());
+            return windowMetrics.getBounds().height() - insets.top - insets.bottom;
+        } else {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            wm.getDefaultDisplay().getMetrics(displayMetrics);
+            return displayMetrics.heightPixels;
         }
     }
 
