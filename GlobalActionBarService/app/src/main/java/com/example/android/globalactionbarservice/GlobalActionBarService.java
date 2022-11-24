@@ -48,9 +48,10 @@ public class GlobalActionBarService extends AccessibilityService {
         lp.type = WindowManager.LayoutParams.TYPE_ACCESSIBILITY_OVERLAY;
         lp.format = PixelFormat.TRANSLUCENT;
         lp.flags |= WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        lp.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE; // Remove if you want the overlay to be touchable
         lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        lp.gravity = Gravity.TOP;
+        lp.gravity = Gravity.BOTTOM;
         LayoutInflater inflater = LayoutInflater.from(this);
         inflater.inflate(R.layout.action_bar, mLayout);
         wm.addView(mLayout, lp);

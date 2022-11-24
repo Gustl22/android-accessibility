@@ -16,29 +16,26 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:focusable="false"
+              android:clickable="false">
     <Button
             android:id="@+id/power"
-            android:text="@string/power"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    <Button
-            android:id="@+id/volume_up"
-            android:text="@string/volume"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    <Button
-            android:id="@+id/scroll"
-            android:text="@string/scroll"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    <Button
-            android:id="@+id/swipe"
-            android:text="@string/swipe"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:minHeight="8pt"
+            android:minWidth="8pt"
+            android:drawableStart="@android:drawable/ic_lock_power_off"
+            android:background="@color/transparentWhite"/>
+    <TextView android:text="@string/accessibility_service_enabled" android:layout_height="wrap_content"
+              android:layout_width="match_parent"
+              android:textColor="@color/transparentWhite"
+              android:padding="8pt"
+              android:focusable="false"
+              android:clickable="false"
+              android:enabled="false"
+              android:focusableInTouchMode="false"/>
 
 </LinearLayout>
